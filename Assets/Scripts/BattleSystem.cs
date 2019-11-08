@@ -35,10 +35,8 @@ public class BattleSystem : MonoBehaviour
         else if (teamA.activeDancers.Count > 0 && teamB.activeDancers.Count > 0)
         {
             Debug.LogWarning("DoRound called, it needs to select a dancer from each team to dance off and put in the FightEventData below");
-            //You need to select two random or engineered random characters to fight...so one from team a and one from team b....
-            //We then need to pass in the two selected dancers into fightManager.Fight(CharacterA,CharacterB);
-            //fightManager.Fight(charA, charB);
 
+            //Randomly chooses team members to compete against each other
             Character teamAChosenOne = teamA.activeDancers[Random.Range(0, teamA.activeDancers.Count)];
             Character teamBChosenOne = teamB.activeDancers[Random.Range(0, teamB.activeDancers.Count)];
 
@@ -47,11 +45,17 @@ public class BattleSystem : MonoBehaviour
         }
         else
         {
-            // IF we get to here...then we have a team has won...winner winner chicken dinner.
-            DanceTeam winner = null; // null is the same as saying nothing...often seen as a null reference in your logs.
+            //Sets the winning team based off who still has dancers.
+            DanceTeam winner = null;
 
-            // We need to determine a winner...but how?...maybe look at the previous if statements for clues?
-          
+            if (teamA.activeDancers.Count > 0)
+            {
+                winner = teamA;
+            }
+            else if (teamB.activeDancers.Count > 0)
+            {
+                winner = teamB;
+            }
 
             //Enables the win effects, and logs it out to the console.
             winner.EnableWinEffects();
@@ -65,12 +69,12 @@ public class BattleSystem : MonoBehaviour
     // This is where we can handle what happens when we win or lose.
     public void FightOver(Character winner, Character defeated, float outcome)
     {
-        Debug.LogWarning("FightOver called, may need to check for winners and/or notify teams of zero mojo dancers");   
-        // assign damage...or if you want to restore health if they want that's up to you....might involve the character script.
+        Debug.LogWarning("FightOver called, may need to check for winners and/or notify teams of zero mojo dancers");
 
         //calling the coroutine so we can put waits in for anims to play
         StartCoroutine(HandleFightOver());
-
+        
+        //If the outcome is a tie, both competetitors gain XP, otherwise the winner gains XP and the defeated gets damaged.
         if (outcome == 0.1f)
         {
             winner.CalculateXP(outcome);
@@ -79,6 +83,7 @@ public class BattleSystem : MonoBehaviour
         else
         {
             winner.CalculateXP(outcome);
+            defeated.DealDamage((outcome * 10) * Random.Range(1, 5));
         }
 
     }

@@ -32,8 +32,7 @@ public class CharacterNameGenerator : MonoBehaviour
 
         for (int i = 0; i < names.Length; i++)
         {
-            //For every name we need to generate, we need to assign a random first name, last name, nickname and descriptor to each.
-            //Below is an example of setting the first name of the emptyName variable to the string "Blank".
+            //Assigns random personal information from Lists
 
             emptyName.firstName = firstNames[Random.Range(0, firstNames.Count)];
             emptyName.lastName = lastNames[Random.Range(0, lastNames.Count)];

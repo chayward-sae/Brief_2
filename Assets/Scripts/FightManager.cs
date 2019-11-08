@@ -16,9 +16,9 @@ public class FightManager : MonoBehaviour
     //You just need determine who wins/loses/draws etc.
     IEnumerator Attack(Character teamACharacter, Character teamBCharacter)
     {
-        float outcome = 0;// the outcome from the fight, i.e. the % that the winner has won by...fractions could help us calculate this, but start with whole numbers i.e. 0 = draw, and 1 = 100% win.
-        Character winner = teamACharacter;//defaulting the winner to TeamA.
-        Character defeated = teamBCharacter;//defaulting the loser to TeamB.
+        float outcome = 0; // the outcome from the fight, i.e. the % that the winner has won by...fractions could help us calculate this, but start with whole numbers i.e. 0 = draw, and 1 = 100% win.
+        Character winner = teamACharacter; //Creating the winner variable, defaulting to Team A to assist with draw outcomes
+        Character defeated = teamBCharacter; //Creating the defeated variable, defaulting to Team B to assist with draw outcomes
 
         // Tells each dancer that they are selcted and sets the animation to dance.
         SetUpAttack(teamACharacter);
@@ -27,24 +27,32 @@ public class FightManager : MonoBehaviour
         // Tells the system to wait X number of seconds until the fight to begins.
         yield return new WaitForSeconds(fightAnimTime);
 
-        // We want to get some battle points from each of our characters...instead of just 0....is there a function in the Character script that could help us?
+        // Create character results from the fight
         int teamABattlePoints = teamACharacter.ReturnBattlePoints();
         int teamBBattlePoints = teamBCharacter.ReturnBattlePoints();
-
+        
+        //If Team A has more points than Team B, Team A wins and the outcome is determined.
         if (teamABattlePoints > teamBBattlePoints)
         {
             Debug.Log("Team A has won with" + teamABattlePoints + "points!");
             outcome = 1 - ((float)teamBBattlePoints / (float)teamABattlePoints);
+            winner = teamACharacter;
+            defeated = teamBCharacter;
         }
+        //If Team B has more points than Team A, Team B wins and the outcome is determined.
         else if (teamBBattlePoints > teamABattlePoints)
         {
             Debug.Log("Team B has won with" + teamBBattlePoints + "points!");
             outcome = 1 - ((float)teamABattlePoints / (float)teamBBattlePoints);
+            winner = teamBCharacter;
+            defeated = teamACharacter;
         }
+        //If Team A and Team B have the same amount of points, it's a draw and the outcome is set.
         else if (teamBBattlePoints == teamABattlePoints)
         {
             Debug.Log("It's a draw!");
             outcome = 0.1f;
+
         }
         else
         {
